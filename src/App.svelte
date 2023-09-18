@@ -1,5 +1,4 @@
 <script>
-	let name = 'linh';
 	let color = 'blue';
 	let firstName = 'quang';
 	let lastName = 'linh';
