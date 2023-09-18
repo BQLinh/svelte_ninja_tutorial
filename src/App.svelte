@@ -1,8 +1,19 @@
 <script>
-
+	let people = [
+		{name: 'linh', age: 20, id:1},
+		{name: 'tom', age: 21, id:2},
+	]
 </script>
 
 <main>
+	{#each people as person}
+		<div>
+			<h4>{person.name}</h4>
+			<p>{person.age}</p>
+		</div>
+	{:else}
+		<p>No person here</p>
+	{/each}
 </main>
 
 <style>
