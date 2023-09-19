@@ -1,9 +1,29 @@
 <script>
+	let people = [
+		{name: 'linh', age: 20, id:1},
+		{name: 'tom', age: 21, id:2},
+	]
 
+	const deletePerson = (id) => {
+		people = people.filter((person) => person.id != id)
+	}
 </script>
 
 <main>
+	{#each people as person}
+		<div>
+			<h4>{person.name}</h4>
+			{#if person.name === 'linh'}
+				<p>This is super man</p>
+			{/if}
+			<p>{person.age} years old</p>
+			<button on:click={() => {deletePerson(person.id)}}>Delete</button>
+		</div>
+	{:else}
+		<p>No person here</p>
+	{/each}
 </main>
+
 
 <style>
 	main {
