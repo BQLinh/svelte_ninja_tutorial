@@ -1,4 +1,7 @@
 <script>
+	import Model from './Model.svelte';
+
+	let showModal = true;
 	let people = [
 		{name: 'linh', age: 20, id:1},
 		{name: 'tom', age: 21, id:2},
@@ -9,6 +12,7 @@
 	}
 </script>
 
+<Model message="hello there" isPromo={true} {showModal}/>
 <main>
 	{#each people as person}
 		<div>
