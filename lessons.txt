@@ -1,5 +1,30 @@
 
 
-# 5 reactive value
+# 5 reactive value 
+  $: fullName = `${firstName} ${lastName}`
+  $: => reactive statement 
 
-#
+# 6 loop
+  {#each people as person}
+
+  {:else}
+
+  {/each}
+
+# 7 inline event
+
+# 8 condition
+  {#if person.name === 'linh'}
+
+  {/if}
+
+# 9 component
+
+# 10 css & conditional style
+
+# 11 props
+  <Model message="hello there" isPromo={true} {showModal}/>
+
+# 12 event forwarding
+
+# 13 event modifiers

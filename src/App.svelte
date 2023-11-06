@@ -1,52 +1,63 @@
 <script>
-	import Model from './Model.svelte';
+	import Header from "./components/Header.svelte";
+	import Footer from "./components/Footer.svelte";
+	import Tabs from "./shared/Tabs.svelte";
+	import CreatePollForm from "./components/CreatePollForm.svelte";
+	import PollList from "./components/PollList.svelte";
+	// tabs
+	let items = ['Current Polls', 'Add New Poll'];
+	let activeItem = 'Current Polls';
+	let polls = [
+		{
+			id: 1,
+			question: 'Python or JavaScript',
+			answerA: 'Python',
+			answerB: 'JavaScript',
+			votesA: 15,
+			votesB: 9,
+		}
+	];
+	const tabChange = (e) => {
+		activeItem = e.detail;
+	};
 
-	let showModal = true;
-	let people = [
-		{name: 'linh', age: 20, id:1},
-		{name: 'tom', age: 21, id:2},
-	]
-
-	const deletePerson = (id) => {
-		people = people.filter((person) => person.id != id)
+	const handleAdd = (e) => {
+		const poll = e.detail;
+		polls = [poll, ...polls];
+		activeItem = 'Current Polls';
+	}
+	const handleVote = (e) => {
+		const { option, id} = e.detail;
+		console.log(option, id)
+		let copiedPolls = [...polls];
+		let upvotedPoll = copiedPolls.find((poll) => poll.id == id);
+		if (option === 'a'){
+			upvotedPoll.votesA ++
+		}
+		if (option === 'b'){
+			upvotedPoll.votesB ++
+		}
+		polls = copiedPolls;
 	}
 </script>
 
-<Model message="hello there" isPromo={true} {showModal}/>
+
+<Header/>
 <main>
-	{#each people as person}
-		<div>
-			<h4>{person.name}</h4>
-			{#if person.name === 'linh'}
-				<p>This is super man</p>
-			{/if}
-			<p>{person.age} years old</p>
-			<button on:click={() => {deletePerson(person.id)}}>Delete</button>
-		</div>
-	{:else}
-		<p>No person here</p>
-	{/each}
+	<Tabs {activeItem} {items} on:tabChange={tabChange}/>
+
+	{#if activeItem === 'Current Polls'}
+		<PollList polls={polls} on:vote={handleVote}/>
+	{:else if activeItem === 'Add New Poll'}
+		<CreatePollForm on:add={handleAdd}/>
+	{/if}
 </main>
+<Footer/>
 
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
+	main{
+		max-width: 960px;
+		margin: 40px auto;
 	}
 </style>
