@@ -1,6 +1,9 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Card from "../shared/Card.svelte";
+  import PollStore from "../stores/PollStore";
+  import Button from "../shared/Button.svelte";
+  import {tweened} from "svelte/motion";
 
   export let poll;
 
@@ -10,8 +13,30 @@
   $: percentA = Math.floor(100 / totalVotes * poll.votesA) | 0;
   $: percentB = Math.floor(100 / totalVotes * poll.votesB) | 0;
   
+  const tweenedA = tweened(0);
+  const tweenedB = tweened(0);
+  $: tweenedA.set(percentA);
+  $: tweenedB.set(percentB);
+  
+
   const handleVote = (option, id) => {
-    dispatch('vote', {option, id});
+    PollStore.update(currentPolls => {
+      let copiedPolls = [...currentPolls];
+      let upvotedPoll = copiedPolls.find((poll) => poll.id == id);
+      if (option === 'a'){
+        upvotedPoll.votesA ++
+      }
+      if (option === 'b'){
+        upvotedPoll.votesB ++
+      }
+      return copiedPolls
+    })
+	}
+
+  const handleDelete = (id) => {
+    PollStore.update(currentPolls => {
+      return currentPolls.filter(poll => poll.id != id)
+    })
   }
 
 </script>
@@ -21,12 +46,15 @@
     <h3>{poll.question}</h3>
     <p>Total votes: {totalVotes}</p>
     <div class="answer" on:click={() => handleVote('a', poll.id)}>
-      <div class="percent percent-a" style="width: {percentA}%;"></div>
+      <div class="percent percent-a" style="width: {$tweenedA}%;"></div>
       <span>{poll.answerA} ({poll.votesA})</span>
     </div>
     <div class="answer" on:click={() => handleVote('b', poll.id)}>
-      <div class="percent percent-b" style="width: {percentB}%"></div>
+      <div class="percent percent-b" style="width: {$tweenedB}%"></div>
       <span>{poll.answerB} ({poll.votesB})</span>
+    </div>
+    <div class="delete">
+      <Button flat={true} on:click={() => handleDelete(poll.id)}>Delete</Button>
     </div>
   </div>
 </Card>
@@ -67,5 +95,9 @@
   .percent-b{
     border-left: 4px solid #45c496;
     background-color: rgba(69,196,150,.2);
+  }
+  .delete{
+    margin-top: 30px;
+    text-align: center;
   }
 </style>
